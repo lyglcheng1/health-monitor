@@ -1,0 +1,112 @@
+<!--
+================================================================
+文件: body3d.html
+项目: 健康数据监控（health-monitor）
+说明: V0.3 3D 人体大屏（基于 demo-anatomy 渲染器适配）
+      · 数据源 /api/body3d/overview（体检指标按身体部位聚合）
+      · 仅异常 / 全部部位 两种模式切换
+      · 复用 demo-anatomy 的 Three.js 渲染（demo 目录保持原样不动）
+      importmap 为静态 JSON 配置（非可执行脚本），把 three 指向
+      本地 vendor，避免外链 CDN。
+================================================================
+-->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 人体健康大屏 · health-monitor</title>
+  <link rel="stylesheet" href="/demo-anatomy/css/style.css">
+  <link rel="stylesheet" href="/static/css/body3d.css">
+  <script type="importmap">
+  { "imports": { "three": "/demo-anatomy/vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.51 4.04 3 5.5l7 7Z"/>
+            <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>3D 人体健康大屏</h1>
+          <span class="sub">体检指标按部位标注 · 拖拽旋转 / 滚轮缩放 / 点击查看</span>
+        </div>
+      </div>
+      <div class="top-controls">
+        <div class="mode-toggle" id="mode-toggle" role="group" aria-label="显示模式">
+          <button type="button" class="mode-btn active" data-mode="abnormal">仅异常</button>
+          <button type="button" class="mode-btn" data-mode="all">全部部位</button>
+        </div>
+        <span class="progress" id="progress" data-state="loading">加载中…</span>
+        <select id="organ-select" class="organ-select" aria-label="快捷定位器官">
+          <option value="">快捷定位器官…</option>
+        </select>
+        <button type="button" class="record-btn" id="record-btn" title="自动旋转并录制 10 秒 WebM（供视频制作）">
+          <span class="rec-dot" aria-hidden="true"></span>
+          <span class="rec-label">录制旋转</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主体三栏 -->
+    <div class="layout">
+      <!-- 左栏：异常部位清单 -->
+      <aside class="sidebar">
+        <h2>部位清单</h2>
+        <div class="sys-list" id="part-list"></div>
+      </aside>
+
+      <!-- 中栏：3D 舞台 -->
+      <main class="stage">
+        <div class="canvas-host" id="canvas-host"></div>
+        <div class="stats" id="stats-panel" aria-label="异常概览">
+          <h3>异常概览</h3>
+          <div class="stats-donut" id="stats-donut"></div>
+          <div class="stats-cards">
+            <div class="stat-card total">
+              <span class="stat-num" id="stat-total">0</span>
+              <span class="stat-label">异常部位</span>
+            </div>
+            <div class="stat-card severe">
+              <span class="stat-num" id="stat-severe">0</span>
+              <span class="stat-label">严重</span>
+            </div>
+            <div class="stat-card moderate">
+              <span class="stat-num" id="stat-moderate">0</span>
+              <span class="stat-label">中度</span>
+            </div>
+            <div class="stat-card mild">
+              <span class="stat-num" id="stat-mild">0</span>
+              <span class="stat-label">轻度</span>
+            </div>
+          </div>
+        </div>
+        <div class="hint" id="hint">正在加载解剖模型…</div>
+      </main>
+
+      <!-- 右栏：结构详情 -->
+      <aside class="panel">
+        <h2>结构详情</h2>
+        <div class="info-body" id="info-body">
+          <p class="muted">点击任意器官查看详情；或从上方下拉框快捷定位。</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 底栏：署名 -->
+    <footer class="foot">
+      <span>数据：本地体检报告解析 · 模型：BodyParts3D 4.0（CC BY 4.0）· 几何优化：ashemag/human-atlas（MIT）</span>
+      <a href="/demo-anatomy/ATTRIBUTION.md" target="_blank" rel="noopener">署名与来源</a>
+    </footer>
+  </div>
+
+  <script type="module" src="/static/js/body3d.js"></script>
+</body>
+</html>

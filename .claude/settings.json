@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(svn status:*)",
+      "Bash(svn diff:*)",
+      "Bash(svn info:*)",
+      "Bash(svn update:*)",
+      "Bash(svn add:*)",
+      "Bash(svn resolve:*)",
+      "Bash(svn commit:*)"
+    ]
+  }
+}

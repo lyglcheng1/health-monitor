@@ -1,0 +1,38 @@
+# 运行数据（不入库）
+data/
+logs/
+
+# 环境变量（含密钥，绝不提交）
+.env
+
+# 虚拟环境
+health-env/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 部署临时包
+.deploy-tmp.tar.gz
+
+# ── 个人隐私数据（真实健康信息，绝不提交）────────────────
+# OCR 校验截图（真实化验单裁剪图，含患者信息与检验值）
+scripts/_verify/
+
+# 视频制作：含真实 3D 大屏数据的截图 / 素材 / 渲染帧 / 成片
+# （body3d-full.png、大屏截图.png 等均为真实健康数据画面）
+intro-video/public/
+intro-video/assets/
+intro-video/out/
+intro-video/_*.png
+intro-video/_*.jpg
+intro-video/node_modules/
+intro-video/.chrome-tmp/
+
+# 运行日志（含内部记录 ID）
+uvicorn*.log
+
+# SVN 元数据（本项目同时用 SVN 管理，git 不跟踪）
+.svn/

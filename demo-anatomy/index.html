@@ -1,0 +1,100 @@
+<!--
+================================================================
+文件: index.html
+说明: 人体解剖 3D 演示（真实器官网格）
+     数据: BodyParts3D 4.0（CC BY 4.0）→ ashemag/human-atlas 优化后的几何
+     渲染: Three.js（本地 vendor），纯前端，无构建步骤
+     纯标记：无内联 style/script/on*，样式见 css/style.css，逻辑见 js/app.js
+================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人体解剖 3D 演示 · health-monitor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- importmap 为静态配置（非可执行脚本）；外链形式浏览器兼容性差，故内联 -->
+  <script type="importmap">
+  { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <!-- 顶栏 -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.51 4.04 3 5.5l7 7Z"/>
+            <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>人体解剖 3D 演示</h1>
+          <span class="sub">BodyParts3D 4.0 真实器官网格 · 拖拽旋转 / 滚轮缩放 / 点击器官查看</span>
+        </div>
+      </div>
+      <div class="top-controls">
+        <span class="progress" id="progress" data-state="loading">加载中…</span>
+        <select id="organ-select" class="organ-select" aria-label="快捷定位器官">
+          <option value="">快捷定位器官…</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- 主体三栏 -->
+    <div class="layout">
+      <!-- 左栏：系统开关 -->
+      <aside class="sidebar">
+        <h2>系统显示</h2>
+        <div class="sys-list" id="sys-list"></div>
+      </aside>
+
+      <!-- 中栏：3D 舞台 -->
+      <main class="stage">
+        <div class="canvas-host" id="canvas-host"></div>
+        <div class="stats" id="stats-panel" aria-label="异常概览">
+          <h3>异常概览</h3>
+          <div class="stats-donut" id="stats-donut"></div>
+          <div class="stats-cards">
+            <div class="stat-card total">
+              <span class="stat-num" id="stat-total">0</span>
+              <span class="stat-label">异常部位</span>
+            </div>
+            <div class="stat-card severe">
+              <span class="stat-num" id="stat-severe">0</span>
+              <span class="stat-label">严重</span>
+            </div>
+            <div class="stat-card moderate">
+              <span class="stat-num" id="stat-moderate">0</span>
+              <span class="stat-label">中度</span>
+            </div>
+            <div class="stat-card mild">
+              <span class="stat-num" id="stat-mild">0</span>
+              <span class="stat-label">轻度</span>
+            </div>
+          </div>
+        </div>
+        <div class="hint" id="hint">正在加载解剖模型…</div>
+      </main>
+
+      <!-- 右栏：结构详情 -->
+      <aside class="panel">
+        <h2>结构详情</h2>
+        <div class="info-body" id="info-body">
+          <p class="muted">点击任意器官查看详情；或从上方下拉框快捷定位。</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 底栏：署名 -->
+    <footer class="foot">
+      <span>模型：BodyParts3D 4.0（CC BY 4.0）· 几何优化：ashemag/human-atlas（MIT）</span>
+      <a href="ATTRIBUTION.md" target="_blank" rel="noopener">署名与来源</a>
+    </footer>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

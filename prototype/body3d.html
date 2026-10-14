@@ -1,0 +1,242 @@
+<!--
+================================================================
+文件: body3d.html
+说明: V0.3 3D 人体大屏 · 静态原型（效果预览）
+     真实实现将用 Three.js + GLB 人体模型；本原型用 SVG 模拟布局与视觉效果。
+     纯标记：无内联 style/script/on* 属性，样式见 css/body3d.css，逻辑见 js/body3d.js。
+================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 人体大屏 · 健康数据监控（原型）</title>
+  <link rel="stylesheet" href="css/body3d.css">
+</head>
+<body>
+  <div class="big-screen mode-abnormal" id="big-screen">
+    <!-- ═══ 顶栏 ═══ -->
+    <header class="topbar">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 21s-6.6-4.4-9.3-8.1C.6 10.1 1.6 6.6 4.7 5.1c2-.9 4.4-.4 5.9 1.1L12 7.6l1.4-1.4c1.5-1.5 3.9-2 5.9-1.1 3.1 1.5 4.1 5 2 7.8C18.6 16.6 12 21 12 21z"
+                fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+        <div class="brand-text">
+          <h1>健康数据监控 · 3D 人体大屏</h1>
+          <p>V0.3 原型预览（静态效果图）</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="seg" id="mode-toggle">
+          <button type="button" class="seg-btn active" data-mode="abnormal">异常</button>
+          <button type="button" class="seg-btn" data-mode="all">全部</button>
+        </div>
+        <span class="divider" aria-hidden="true"></span>
+        <div class="clock" id="clock">--:--:--</div>
+        <span class="tag">数据截至 2026-09-28</span>
+      </div>
+    </header>
+
+    <!-- ═══ 统计条 ═══ -->
+    <section class="stats-row" id="stats-row">
+      <div class="stat-card">
+        <span class="stat-num" id="stat-exams">0</span>
+        <span class="stat-label">体检记录</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="stat-metrics">0</span>
+        <span class="stat-label">指标总数</span>
+      </div>
+      <div class="stat-card stat-danger">
+        <span class="stat-num" id="stat-abnormal">0</span>
+        <span class="stat-label">异常指标</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="stat-parts">0</span>
+        <span class="stat-label">涉及部位</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="stat-latest">--</span>
+        <span class="stat-label">最近体检</span>
+      </div>
+    </section>
+
+    <!-- ═══ 主区域三栏 ═══ -->
+    <main class="main-grid">
+      <!-- 左栏：异常指标列表 -->
+      <aside class="panel left-panel">
+        <div class="panel-head">
+          <h2>异常指标</h2>
+          <span class="badge" id="ab-count">0 项</span>
+        </div>
+        <div class="panel-body list-scroll" id="abnormal-list">
+          <p class="placeholder">加载中…</p>
+        </div>
+      </aside>
+
+      <!-- 中栏：人体舞台 -->
+      <section class="panel stage-panel">
+        <div class="stage" id="stage">
+          <svg class="body-svg" viewBox="0 0 300 520" role="img" aria-label="人体部位标注图" id="body-svg">
+            <defs>
+              <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#23304e"/>
+                <stop offset="100%" stop-color="#151d33"/>
+              </linearGradient>
+              <filter id="glowRed" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              <filter id="glowCyan" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- 人体轮廓 -->
+            <g id="silhouette">
+              <path class="body-fill" d="
+                M150 86
+                C 118 90, 96 100, 93 122
+                L 90 180
+                C 88 230, 98 258, 110 288
+                L 190 288
+                C 202 258, 212 230, 210 180
+                L 207 122
+                C 204 100, 182 90, 150 86
+                Z" />
+              <ellipse class="body-fill" cx="150" cy="52" rx="30" ry="36"/>
+              <rect class="body-fill" x="139" y="84" width="22" height="20" rx="9"/>
+              <path class="limb" d="M 97 126 C 85 158, 74 190, 70 232" stroke-width="16"/>
+              <path class="limb" d="M 203 126 C 215 158, 226 190, 230 232" stroke-width="16"/>
+              <ellipse class="limb" cx="68" cy="242" rx="11" ry="10"/>
+              <ellipse class="limb" cx="232" cy="242" rx="11" ry="10"/>
+              <path class="limb" d="M 118 288 C 116 340, 116 390, 118 442" stroke-width="24"/>
+              <path class="limb" d="M 182 288 C 184 340, 184 390, 182 442" stroke-width="24"/>
+              <ellipse class="limb" cx="116" cy="462" rx="17" ry="9"/>
+              <ellipse class="limb" cx="184" cy="462" rx="17" ry="9"/>
+            </g>
+
+            <!-- 全身异常光晕（体重异常时点亮） -->
+            <g id="wb-glow" class="wb-glow">
+              <path d="
+                M150 86
+                C 118 90, 96 100, 93 122
+                L 90 180
+                C 88 230, 98 258, 110 288
+                L 190 288
+                C 202 258, 212 230, 210 180
+                L 207 122
+                C 204 100, 182 90, 150 86
+                Z" fill="none"/>
+              <ellipse fill="none" cx="150" cy="52" rx="32" ry="38"/>
+              <path fill="none" d="M 97 126 C 85 158, 74 190, 70 232"/>
+              <path fill="none" d="M 203 126 C 215 158, 226 190, 230 232"/>
+              <path fill="none" d="M 118 288 C 116 340, 116 390, 118 442"/>
+              <path fill="none" d="M 182 288 C 184 340, 184 390, 182 442"/>
+            </g>
+
+            <!-- 血液（正常示例，全部模式显示为蓝色） -->
+            <g class="part normal" data-part="blood" data-name="血液">
+              <ellipse class="region" cx="150" cy="150" rx="36" ry="42"/>
+              <circle class="dot" cx="150" cy="150" r="3.5"/>
+              <text class="label" x="150" y="108" text-anchor="middle">血液</text>
+              <title>血液（血常规）</title>
+            </g>
+
+            <!-- 肝脏 -->
+            <g class="part abnormal" data-part="liver" data-name="肝脏">
+              <ellipse class="region" cx="128" cy="168" rx="17" ry="15"/>
+              <circle class="dot" cx="128" cy="168" r="3.5"/>
+              <text class="label" x="100" y="186" text-anchor="middle">肝</text>
+              <title>肝脏 · ALT 68↑</title>
+            </g>
+
+            <!-- 心脏 -->
+            <g class="part abnormal" data-part="heart" data-name="心脏">
+              <ellipse class="region" cx="170" cy="148" rx="17" ry="15"/>
+              <circle class="dot" cx="170" cy="148" r="3.5"/>
+              <text class="label" x="196" y="150" text-anchor="middle">心</text>
+              <title>心脏 · 收缩压 152↑</title>
+            </g>
+
+            <!-- 甲状腺 -->
+            <g class="part abnormal" data-part="thyroid" data-name="甲状腺">
+              <ellipse class="region" cx="150" cy="100" rx="15" ry="9"/>
+              <circle class="dot" cx="150" cy="100" r="3.5"/>
+              <text class="label" x="150" y="86" text-anchor="middle">甲状腺</text>
+              <title>甲状腺 · TSH 0.28↓</title>
+            </g>
+
+            <!-- 胰腺 -->
+            <g class="part abnormal" data-part="pancreas" data-name="胰腺">
+              <ellipse class="region" cx="150" cy="206" rx="17" ry="11"/>
+              <circle class="dot" cx="150" cy="206" r="3.5"/>
+              <text class="label" x="150" y="230" text-anchor="middle">胰</text>
+              <title>胰腺 · 空腹血糖 7.2↑</title>
+            </g>
+
+            <!-- 肾脏（双侧） -->
+            <g class="part abnormal" data-part="kidney" data-name="肾脏">
+              <ellipse class="region" cx="112" cy="222" rx="10" ry="16"/>
+              <ellipse class="region" cx="188" cy="222" rx="10" ry="16"/>
+              <circle class="dot" cx="112" cy="222" r="3.5"/>
+              <circle class="dot" cx="188" cy="222" r="3.5"/>
+              <text class="label" x="150" y="252" text-anchor="middle">肾</text>
+              <title>肾脏 · 尿酸 486↑</title>
+            </g>
+
+            <!-- 骨骼/关节（膝关节） -->
+            <g class="part abnormal" data-part="bone" data-name="骨骼/关节">
+              <ellipse class="region" cx="116" cy="416" rx="11" ry="17"/>
+              <ellipse class="region" cx="184" cy="416" rx="11" ry="17"/>
+              <circle class="dot" cx="116" cy="416" r="3.5"/>
+              <circle class="dot" cx="184" cy="416" r="3.5"/>
+              <text class="label" x="150" y="448" text-anchor="middle">骨</text>
+              <title>骨骼/关节 · 血钙 2.62↑</title>
+            </g>
+          </svg>
+
+          <!-- 图例 -->
+          <div class="legend">
+            <span class="legend-item"><i class="dot-legend danger"></i>异常</span>
+            <span class="legend-item"><i class="dot-legend normal"></i>正常</span>
+            <span class="legend-item"><i class="dot-legend dim"></i>无数据</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右栏：部位详情 -->
+      <aside class="panel right-panel">
+        <div class="panel-head">
+          <h2>部位详情</h2>
+        </div>
+        <div class="panel-body" id="part-detail">
+          <p class="placeholder">加载中…</p>
+        </div>
+      </aside>
+    </main>
+
+    <!-- ═══ 提示条 ═══ -->
+    <footer class="footbar">
+      <span>💡 静态原型：真实大屏将使用 Three.js 加载 GLB 人体模型，支持旋转 / 缩放 / 部位点击弹层。</span>
+      <span class="foot-hint">点击左侧异常指标或人体部位查看详情</span>
+    </footer>
+  </div>
+
+  <!-- 悬浮提示 -->
+  <div class="tooltip" id="tooltip" hidden></div>
+
+  <script src="js/body3d.js"></script>
+</body>
+</html>

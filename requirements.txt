@@ -1,0 +1,29 @@
+# 核心框架
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# 数据库
+sqlalchemy==2.0.23
+aiosqlite==0.19.0
+
+# 数据验证
+pydantic==2.5.0
+
+# HTTP 客户端（后续 AI 提取/分析调用 LLM）
+httpx>=0.25.2,<0.29
+
+# 文件处理
+aiofiles==23.2.1
+python-multipart==0.0.6
+
+# 本地 OCR（onnxruntime，CPU 推理；自带中英文识别模型）
+rapidocr-onnxruntime>=1.3.10,<2
+
+# 工具
+python-dotenv==1.0.0
+# 登录会话签名（itsdangerous 签名 cookie）
+itsdangerous==2.2.0
+
+# 测试
+pytest==7.4.3
+pytest-asyncio==0.21.1

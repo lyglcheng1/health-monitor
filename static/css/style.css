@@ -1,0 +1,306 @@
+/*===============================================================
+ * 文件: style.css
+ * 作者: chengge
+ * 最后修改: 2026-10-11
+ *===============================================================*/
+
+/* ============================================================
+   文件: style.css
+   项目: 健康数据监控（health-monitor）
+   说明: 全站样式（HTML 内禁止内联 style/script）
+   ============================================================ */
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1f2937;
+  --text-secondary: #6b7280;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --warning: #d97706;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.app { min-height: 100vh; }
+
+/* ── 顶栏 ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 20px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand-title { font-size: 17px; font-weight: 700; color: var(--primary); }
+.brand-tagline { color: var(--text-secondary); font-size: 12px; }
+
+.topnav { display: flex; gap: 4px; flex: 1; }
+.topnav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+.topnav a:hover { background: #eff6ff; color: var(--primary); }
+.topnav a.active { background: #dbeafe; color: var(--primary-dark); font-weight: 600; }
+
+/* ── 内容区 ── */
+.content { max-width: 1080px; margin: 20px auto; padding: 0 16px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.card h2 { margin-top: 0; font-size: 16px; }
+.card h3 { font-size: 14px; margin: 8px 0 4px; }
+
+/* ── 按钮/表单 ── */
+.btn {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.btn:hover { background: var(--primary-dark); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-ghost { background: #fff; color: var(--text); border-color: var(--border); }
+.btn-ghost:hover { background: #f1f5f9; }
+.btn-danger { background: #fff; color: var(--danger); border-color: #fecaca; }
+.btn-danger:hover { background: #fef2f2; }
+.btn-sm { padding: 3px 10px; font-size: 13px; }
+
+input, select, textarea {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text);
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+textarea { resize: vertical; min-height: 120px; }
+label { display: block; margin: 8px 0 4px; color: var(--text-secondary); font-size: 13px; }
+
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.form-row > div { flex: 1; min-width: 140px; }
+.form-actions { margin-top: 12px; display: flex; gap: 8px; }
+
+/* ── 表格 ── */
+table { width: 100%; border-collapse: collapse; }
+th, td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+th { color: var(--text-secondary); font-weight: 600; background: #f8fafc; }
+tr:hover td { background: #fafcff; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #e2e8f0;
+  color: var(--text-secondary);
+}
+.badge-abnormal { background: #fee2e2; color: var(--danger); }
+.badge-ok { background: #dcfce7; color: var(--success); }
+.badge-normal { background: #e0e7ff; color: var(--primary-dark); }
+
+/* ── 列表 ── */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.list-item:hover { border-color: var(--primary); box-shadow: 0 1px 4px rgba(37, 99, 235, 0.1); }
+.list-item .title { flex: 1; font-weight: 600; }
+.list-item .sub { color: var(--text-secondary); font-size: 12px; }
+
+/* ── 登录页 ── */
+.login-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.login-card { width: 340px; }
+.login-card h1 { font-size: 20px; color: var(--primary); margin-top: 0; }
+
+/* ── 图片/OCR ── */
+.exam-layout { display: flex; gap: 16px; flex-wrap: wrap; }
+.exam-image { flex: 1; min-width: 260px; }
+.exam-image img { max-width: 100%; border: 1px solid var(--border); border-radius: 8px; }
+.exam-ocr { flex: 1; min-width: 260px; }
+
+/* ── 指标行内编辑 ── */
+.metric-edit { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.metric-edit input[type="checkbox"] { width: auto; }
+
+/* ── 提示 toast ── */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111827;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.toast.error { background: var(--danger); }
+.toast.success { background: var(--success); }
+
+.hidden { display: none !important; }
+
+.muted { color: var(--text-secondary); font-size: 12px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.gap-8 { gap: 8px; }
+
+/* 大屏 3D 占位（后续 Three.js 渲染容器） */
+.body3d-stage {
+  height: 420px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* ── 优化：链接式列表项 / 统计卡片 / 通用工具类 ── */
+
+.list-item-link {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+}
+
+.grow-2 { flex: 2; }
+
+.stat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.stat {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #f8fafc;
+}
+
+.stat-label { color: var(--text-secondary); font-size: 12px; }
+.stat-num { font-size: 24px; font-weight: 700; margin-top: 2px; }
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  color: var(--text);
+  font-size: 13px;
+}
+.checkbox-label input[type="checkbox"] { width: auto; }
+
+.metric-summary { margin: 8px 0 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.row-abnormal td { background: #fff7f7; }
+.row-abnormal:hover td { background: #fef2f2; }
+td.actions { white-space: nowrap; }
+
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+
+.backup-create-form { max-width: 560px; }
+.backup-create-form input { flex: 1; }
+
+/* 3D 大屏卡片（仪表盘） */
+.body3d-card { border-color: #bfdbfe; background: linear-gradient(180deg, #ffffff, #f5f9ff); }
+.body3d-preview {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  min-height: 44px;
+}
+
+.part-chip {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #e2e8f0;
+  color: var(--text-secondary);
+}
+.part-chip.severe { background: #fee2e2; color: var(--danger); }
+.part-chip.moderate { background: #ffedd5; color: var(--warning); }
+.part-chip.mild { background: #fef9c3; color: #a16207; }
+
+/* 3D 大屏全宽嵌入 */
+.content.wide { max-width: 100%; padding: 0; }
+.body3d-embed iframe {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 52px);
+  border: 0;
+  background: #05080f;
+}

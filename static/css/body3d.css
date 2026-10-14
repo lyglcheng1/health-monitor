@@ -1,0 +1,189 @@
+/*===============================================================
+ * 文件: body3d.css
+ * 项目: 健康数据监控（health-monitor）
+ * 说明: 3D 人体大屏（body3d.html）的增量样式
+ *       · 模式切换按钮（仅异常 / 全部部位）
+ *       · 左栏部位清单（part-item，复用 sys-item 视觉语言）
+ *       · 正常部位的 badge（ok）
+ *       其余样式复用 /demo-anatomy/css/style.css
+ *===============================================================*/
+
+/* ── 录制旋转按钮（自动旋转 + canvas 采集，供视频制作）── */
+.record-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.55);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background var(--duration) var(--ease),
+              color var(--duration) var(--ease),
+              border-color var(--duration) var(--ease);
+}
+
+.record-btn:hover {
+  color: var(--text-1);
+  border-color: var(--accent);
+}
+
+.record-btn .rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-2);
+  flex: 0 0 auto;
+  transition: background var(--duration) var(--ease);
+}
+
+.record-btn.recording {
+  color: #fff;
+  background: rgba(244, 63, 94, 0.16);
+  border-color: var(--severe);
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.25);
+}
+
+.record-btn.recording .rec-dot {
+  background: var(--severe);
+  animation: rec-blink 1s ease-in-out infinite;
+}
+
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.25; }
+}
+
+/* ── 模式切换 ── */
+.mode-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.mode-btn {
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background var(--duration) var(--ease),
+              color var(--duration) var(--ease),
+              box-shadow var(--duration) var(--ease);
+}
+
+.mode-btn:hover { color: var(--text-1); }
+
+.mode-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25);
+}
+
+/* ── 部位清单（左栏）── */
+.part-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-2);
+  transition: background var(--duration) var(--ease),
+              color var(--duration) var(--ease),
+              border-color var(--duration) var(--ease);
+  user-select: none;
+}
+
+.part-item:hover {
+  background: rgba(148, 163, 184, 0.06);
+  color: var(--text-1);
+}
+
+.part-item.abnormal {
+  color: var(--text-1);
+}
+
+.part-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.part-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.part-count {
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+  background: rgba(148, 163, 184, 0.08);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.part-item.abnormal .part-count {
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.part-item.normal .part-count {
+  color: var(--ok);
+  background: var(--ok-soft);
+}
+
+/* ── 正常部位 badge（全部模式）── */
+.ab-badge.ok {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.1);
+}
+
+/* ── 指标状态颜色（右栏详情）：正常绿色，偏高/偏低/异常红色系，
+     偏高 ↑、偏低 ↓ 箭头由 JS 拼入文本，这里仅着色 ── */
+.ab-issue .flag.status-normal {
+  color: var(--ok);
+  background: var(--ok-soft);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.ab-issue .flag.status-high,
+.ab-issue .flag.status-abnormal {
+  color: var(--severe);
+  background: var(--severe-soft);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.ab-issue .flag.status-low {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+/* ── AI 严重度判定理由（右栏详情，异常部位）── */
+.severity-reason {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-2);
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+}
